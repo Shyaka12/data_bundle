@@ -36,37 +36,7 @@ public class MenuService {
         return menuItemRepository.save(subMenuItem);
     }
 
-//    private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu) {
-//        if (isSubMenu) {
-//            AtomicInteger index = new AtomicInteger(1); // Start submenu numbering from 1
-//
-//            // Filter out "Gusubira Inyuma" and keep other menu items
-//            List<MenuItem> backMenuItems = menuItems.stream()
-//                    .filter(menuItem -> "Gusubira Inyuma".equals(menuItem.getName()))
-//                    .collect(Collectors.toList());
-//            List<MenuItem> otherMenuItems = menuItems.stream()
-//                    .filter(menuItem -> !"Gusubira Inyuma".equals(menuItem.getName()))
-//                    .collect(Collectors.toList());
-//
-//            // Format other menu items starting from index 1
-//            List<String> formattedMenuItems = otherMenuItems.stream()
-//                    .map(menuItem -> index.getAndIncrement() + ") " + menuItem.getName())
-//                    .collect(Collectors.toList());
-//
-//            // Add "Gusubira Inyuma" at index 0 if it exists
-//            if (!backMenuItems.isEmpty()) {
-//                formattedMenuItems.add(0, "0) " + backMenuItems.get(0).getName());
-//            }
-//
-//            return formattedMenuItems;
-//        } else {
-//            // For the main menu, format as usual starting from index 0
-//            AtomicInteger index = new AtomicInteger();
-//            return menuItems.stream()
-//                    .map(menuItem -> index.getAndIncrement() + ") " + menuItem.getName())
-//                    .collect(Collectors.toList());
-//        }
-//    }
+
 private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu) {
     if (isSubMenu) {
         // Filter "Gusubira Inyuma" from the menu

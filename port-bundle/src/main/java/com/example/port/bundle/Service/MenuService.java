@@ -45,14 +45,10 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
         List<MenuItem> otherMenuItems = menuItems.stream()
                 .filter(menuItem -> !"Gusubira Inyuma".equals(menuItem.getName()))
                 .collect(Collectors.toList());
-
-        // Format all other menu items starting from index 1
         AtomicInteger index = new AtomicInteger(1);
         List<String> formattedMenuItems = otherMenuItems.stream()
                 .map(menuItem -> index.getAndIncrement() + ") " + menuItem.getName())
                 .collect(Collectors.toList());
-
-        // Add "Gusubira Inyuma" at the bottom with index 0
         if (!backMenuItems.isEmpty()) {
             formattedMenuItems.add("0) " + backMenuItems.get(0).getName());
         }

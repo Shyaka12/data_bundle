@@ -36,7 +36,6 @@ public class MenuService {
         return menuItemRepository.save(subMenuItem);
     }
 
-
 private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu) {
     if (isSubMenu) {
         List<MenuItem> backMenuItems = menuItems.stream()
@@ -52,10 +51,8 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
         if (!backMenuItems.isEmpty()) {
             formattedMenuItems.add("0) " + backMenuItems.get(0).getName());
         }
-
         return formattedMenuItems;
     } else {
-        // For the main menu, format as usual starting from index 0
         AtomicInteger index = new AtomicInteger();
         return menuItems.stream()
                 .map(menuItem -> index.getAndIncrement() + ") " + menuItem.getName())
@@ -75,13 +72,9 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
 
         // Get the submenu items for the parent menu
         List<MenuItem> subMenuItems = parentMenuItem.getSubMenuItems();
-
-        // Convert menu items into their string representations
         List<String> submenu = subMenuItems.stream()
                 .map(item -> item.getId() + ") " + item.getName())
                 .collect(Collectors.toList());
-
-        // Call reformatMenu to adjust "Gusubira Inyuma" to index 0
         return reformatMenu(submenu);
 
     }
@@ -91,13 +84,9 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
                 .filter(item -> item.contains("Gusubira Inyuma"))
                 .findFirst()
                 .orElse(null);
-
-        // Remove "Gusubira Inyuma" from the list
         List<String> reorderedMenu = submenu.stream()
                 .filter(item -> !item.contains("Gusubira Inyuma"))
                 .collect(Collectors.toList());
-
-        // Re-index the rest of the menu starting from 1
         AtomicInteger index = new AtomicInteger(1);
         List<String> formattedMenu = reorderedMenu.stream()
                 .map(item -> index.getAndIncrement() + ") " + item.split("\\)", 2)[1].trim())
@@ -132,12 +121,9 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
         // Verify the main parent menu exists
         MenuItem parentMenu = menuItemRepository.findById(menuItemId)
                 .orElseThrow(() -> new RuntimeException("Parent menu item not found with id: " + menuItemId));
-        // Verify the submenu exists
         MenuItem subMenuItem = menuItemRepository.findById(submenuItemId)
                 .orElseThrow(() -> new RuntimeException("Submenu item not found with id: " + submenuItemId));
-        // Set the submenu as the parent of the new sub submenu
         subSubMenuItem.setParentMenu(subMenuItem);
-        // Save and return the new submenu
         return menuItemRepository.save(subSubMenuItem);
     }
 

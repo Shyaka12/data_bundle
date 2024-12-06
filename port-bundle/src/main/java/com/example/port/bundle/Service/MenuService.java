@@ -27,7 +27,6 @@ public class MenuService {
     public List<MenuItem> getAllTopLevelMenuItems() {
         return menuItemRepository.findByParentMenuIsNull();
     }
-
     // Create a submenu for a specific menu item
     public MenuItem createSubMenuItem(Long menuItemId, MenuItem subMenuItem) {
         MenuItem parentMenuItem = menuItemRepository.findById(menuItemId)

@@ -86,12 +86,9 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
         List<String> formattedMenu = reorderedMenu.stream()
                 .map(item -> index.getAndIncrement() + ") " + item.split("\\)", 2)[1].trim())
                 .collect(Collectors.toList());
-
-        // Add "Gusubira Inyuma" at the end
         if (backOption != null) {
             formattedMenu.add("0) " + backOption.split("\\)", 2)[1].trim());
         }
-
         return formattedMenu;
     }
 
@@ -102,9 +99,8 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
     }
 
     public MenuItem getMenuItemByIndex(int index, Long parentId) {
-        List<MenuItem> menuItems = (parentId == null) ? getAllTopLevelMenuItems() : getSubMenuItems(parentId);
-
-        // Validate input range
+        List<MenuItem> menuItems = (parentId == null) ? getAllTopLevelMenuItems()
+                : getSubMenuItems(parentId);
         if (index < 0 || index >= menuItems.size()) {
             throw new RuntimeException("Menu index out of bounds.");
         }

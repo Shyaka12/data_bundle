@@ -75,38 +75,37 @@ public class MenuController {
 
                 if (navigationStack.isEmpty()) {
                     // At the main menu
-                    if (input == 0) {
-                        // Navigate to the next submenu of index 0
-                        MenuItem nextSubMenu = menuService.getMenuItemByIndex(0, null);
-                        navigationStack.push(nextSubMenu.getId());
-                        List<String> nextSubMenuList = menuService.getSubMenuList(nextSubMenu.getId());
-                        return ResponseEntity.ok(nextSubMenuList);
-                    } else {
-                        // Navigate to the selected submenu
-                        MenuItem selectedMenuItem = menuService.getMenuItemByIndex(input, null);
-                        navigationStack.push(selectedMenuItem.getId());
-                        List<String> subMenuList = menuService.getSubMenuList(selectedMenuItem.getId());
-                        return ResponseEntity.ok(subMenuList);
+                    List<String> mainMenu = menuService.getFormattedTopLevelMenuItems();
+                    if (input >= mainMenu.size()) {
+                        return ResponseEntity.badRequest().body("Invalid input.");
                     }
+
+                    MenuItem selectedMenuItem = menuService.getMenuItemByIndex(input, null);
+                    navigationStack.push(selectedMenuItem.getId());
+                    List<String> subMenuList = menuService.getSubMenuList(selectedMenuItem.getId());
+                    return ResponseEntity.ok(subMenuList);
                 } else {
                     // In a submenu
+                    Long currentMenuId = navigationStack.peek();
+                    List<String> currentSubMenu = menuService.getSubMenuList(currentMenuId);
+
                     if (input == 0) {
                         // Go back to the previous menu
                         navigationStack.pop();
 
                         if (navigationStack.isEmpty()) {
-                            // If back to the main menu
                             List<String> mainMenu = menuService.getFormattedTopLevelMenuItems();
                             return ResponseEntity.ok(mainMenu);
                         } else {
-                            // Return to the previous submenu
                             Long previousMenuId = navigationStack.peek();
                             List<String> previousSubMenu = menuService.getSubMenuList(previousMenuId);
                             return ResponseEntity.ok(previousSubMenu);
                         }
+                    } else if (input > currentSubMenu.size()) {
+                        // Validate if the input exceeds the submenu options
+                        return ResponseEntity.badRequest().body("Invalid input. Please select a valid submenu option.");
                     } else {
                         // Navigate to the deeper submenu
-                        Long currentMenuId = navigationStack.peek();
                         MenuItem selectedSubMenuItem = menuService.getMenuItemByIndex(input - 1, currentMenuId);
                         navigationStack.push(selectedSubMenuItem.getId());
                         List<String> deeperSubMenuList = menuService.getSubMenuList(selectedSubMenuItem.getId());
@@ -118,9 +117,11 @@ public class MenuController {
             }
         } catch (RuntimeException e) {
             // Handle runtime exceptions, such as invalid input indices
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("An error occurred: " + e.getMessage());
         }
     }
+
+
     @GetMapping("/{menuItemId}/submenu-with-debug")
     public List<MenuItem> getSubMenuItemsWithDebug(@PathVariable Long menuItemId) {
         return menuService.getSubMenuItemsWithDebug(menuItemId);

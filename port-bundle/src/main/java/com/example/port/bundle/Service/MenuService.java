@@ -39,7 +39,6 @@ public class MenuService {
 
 private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu) {
     if (isSubMenu) {
-        // Filter "Gusubira Inyuma" from the menu
         List<MenuItem> backMenuItems = menuItems.stream()
                 .filter(menuItem -> "Gusubira Inyuma".equals(menuItem.getName()))
                 .collect(Collectors.toList());
@@ -67,9 +66,6 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
                 .collect(Collectors.toList());
     }
 }
-
-
-
     // Get submenus for a specific menu item
     public List<MenuItem> getSubMenuItems(Long menuItemId) {
         MenuItem menuItem = menuItemRepository.findById(menuItemId)

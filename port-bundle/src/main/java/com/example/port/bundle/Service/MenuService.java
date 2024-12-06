@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class MenuService {
     @Autowired
     private MenuItemRepository menuItemRepository;
-
     // Create a new menu item with optional parent
     public MenuItem createMenuItem(MenuItem menuItem, Long parentId) {
         if (parentId != null) {
@@ -22,7 +21,6 @@ public class MenuService {
         }
         return menuItemRepository.save(menuItem);
     }
-
     // Get all top-level menu items (without parent)
     public List<MenuItem> getAllTopLevelMenuItems() {
         return menuItemRepository.findByParentMenuIsNull();
@@ -35,7 +33,6 @@ public class MenuService {
         subMenuItem.setParentMenu(parentMenuItem);
         return menuItemRepository.save(subMenuItem);
     }
-
 private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu) {
     if (isSubMenu) {
         List<MenuItem> backMenuItems = menuItems.stream()
@@ -69,8 +66,6 @@ private List<String> formatMenuItems(List<MenuItem> menuItems, boolean isSubMenu
     public List<String> getSubMenuList(Long menuItemId) {
         MenuItem parentMenuItem = menuItemRepository.findById(menuItemId)
                 .orElseThrow(() -> new RuntimeException("Menu item not found with id: " + menuItemId));
-
-        // Get the submenu items for the parent menu
         List<MenuItem> subMenuItems = parentMenuItem.getSubMenuItems();
         List<String> submenu = subMenuItems.stream()
                 .map(item -> item.getId() + ") " + item.getName())
